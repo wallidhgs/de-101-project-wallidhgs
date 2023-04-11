@@ -1,0 +1,152 @@
+{
+    "data": {
+        "products": {
+            "errors": null,
+            "products": [
+                {
+                    "cardType": "default",
+                    "cloudProductId": "f0a2dfed-0632-5e1c-a70a-c0e4ce541100",
+                    "colorDescription": "Black/Volt/Anthracite/White",
+                    "colorways": [
+                        {
+                            "colorDescription": "Black/Volt/Anthracite/White",
+                            "images": {
+                                "portraitURL": "https://static.nike.com/a/images/c_limit,w_400,f_auto/t_product_v1/86561b82-0252-414b-a352-109e6afe4082/image.jpg",
+                                "squarishURL": "https://static.nike.com/a/images/t_default/5ab48afe-5a18-4e55-9620-2f1a3f7ce889/superrep-cycle-2-next-nature-womens-indoor-cycling-shoes-cqGbFr.png"
+                            },
+                            "pdpUrl": "{countryLang}/t/superrep-cycle-2-next-nature-womens-indoor-cycling-shoes-cqGbFr/DH3395-001",
+                            "price": {
+                                "currency": "USD",
+                                "currentPrice": 120,
+                                "discounted": false,
+                                "employeePrice": 72,
+                                "fullPrice": 120,
+                                "minimumAdvertisedPrice": null
+                            },
+                            "cloudProductId": "f0a2dfed-0632-5e1c-a70a-c0e4ce541100",
+                            "inStock": true,
+                            "isComingSoon": false,
+                            "isBestSeller": false,
+                            "isExcluded": false,
+                            "isLaunch": false,
+                            "isMemberExclusive": false,
+                            "isNew": false,
+                            "label": "IN_STOCK",
+                            "pid": "13941884",
+                            "prebuildId": null,
+                            "productInstanceId": null
+                        },
+                        {
+                            "colorDescription": "Crimson Bliss/Total Orange/Pearl White",
+                            "images": {
+                                "portraitURL": "https://static.nike.com/a/images/c_limit,w_400,f_auto/t_product_v1/a543d864-b701-4cf5-b035-8f36c974c212/image.jpg",
+                                "squarishURL": "https://static.nike.com/a/images/t_default/eee409a4-5fb6-4e20-9319-50f4e37f6059/superrep-cycle-2-next-nature-womens-indoor-cycling-shoes-cqGbFr.png"
+                            },
+                            "pdpUrl": "{countryLang}/t/superrep-cycle-2-next-nature-womens-indoor-cycling-shoes-cqGbFr/DH3395-600",
+                            "price": {
+                                "currency": "USD",
+                                "currentPrice": 84.97,
+                                "discounted": true,
+                                "employeePrice": 50.98,
+                                "fullPrice": 120,
+                                "minimumAdvertisedPrice": null
+                            },
+                            "cloudProductId": "c8d07ae8-c8a3-5f51-ab0f-a31f9e5a678a",
+                            "inStock": true,
+                            "isComingSoon": false,
+                            "isBestSeller": false,
+                            "isExcluded": false,
+                            "isLaunch": false,
+                            "isMemberExclusive": false,
+                            "isNew": false,
+                            "label": "IN_STOCK",
+                            "pid": "13941889",
+                            "prebuildId": null,
+                            "productInstanceId": null
+                        },
+                        {
+                            "colorDescription": "White/Mint Foam/Laser Blue/Black",
+                            "images": {
+                                "portraitURL": "https://static.nike.com/a/images/c_limit,w_400,f_auto/t_product_v1/cdb14a51-6641-498e-9959-46422a2568f0/image.jpg",
+                                "squarishURL": "https://static.nike.com/a/images/t_default/dadcf1ce-0614-4712-9f22-2fd8d008d267/superrep-cycle-2-next-nature-womens-indoor-cycling-shoes-cqGbFr.png"
+                            },
+                            "pdpUrl": "{countryLang}/t/superrep-cycle-2-next-nature-womens-indoor-cycling-shoes-cqGbFr/DH3395-100",
+                            "price": {
+                                "currency": "USD",
+                                "currentPrice": 92.97,
+                                "discounted": true,
+                                "employeePrice": 55.78,
+                                "fullPrice": 120,
+                                "minimumAdvertisedPrice": null
+                            },
+                            "cloudProductId": "a39e554f-c501-5ca3-8688-7c4be1141ede",
+                            "inStock": true,
+                            "isComingSoon": false,
+                            "isBestSeller": false,
+                            "isExcluded": false,
+                            "isLaunch": false,
+                            "isMemberExclusive": false,
+                            "isNew": false,
+                            "label": "IN_STOCK",
+                            "pid": "13941888",
+                            "prebuildId": null,
+                            "productInstanceId": null
+                        }
+                    ],
+                    "customizable": false,
+                    "hasExtendedSizing": false,
+                    "id": "b4a96baa-7c4f-4d87-9f1d-a438f912fd0a",
+                    "images": {
+                        "portraitURL": "https://static.nike.com/a/images/c_limit,w_400,f_auto/t_product_v1/86561b82-0252-414b-a352-109e6afe4082/image.jpg",
+                        "squarishURL": "https://static.nike.com/a/images/t_default/5ab48afe-5a18-4e55-9620-2f1a3f7ce889/superrep-cycle-2-next-nature-womens-indoor-cycling-shoes-cqGbFr.png"
+                    },
+                    "inStock": true,
+                    "isComingSoon": false,
+                    "isBestSeller": false,
+                    "isExcluded": false,
+                    "isGiftCard": false,
+                    "isJersey": false,
+                    "isLaunch": false,
+                    "isMemberExclusive": false,
+                    "isNBA": false,
+                    "isNFL": false,
+                    "isSustainable": true,
+                    "label": "IN_STOCK",
+                    "nbyColorway": null,
+                    "pid": "13941884",
+                    "prebuildId": null,
+                    "price": {
+                        "currency": "USD",
+                        "currentPrice": 120,
+                        "discounted": false,
+                        "employeePrice": 72,
+                        "fullPrice": 120,
+                        "minimumAdvertisedPrice": null
+                    },
+                    "productInstanceId": null,
+                    "productType": "FOOTWEAR",
+                    "properties": null,
+                    "salesChannel": [
+                        "NikeApp",
+                        "Nike.com",
+                        "Nike Store Experiences"
+                    ],
+                    "subtitle": "Women's Indoor Cycling Shoes",
+                    "title": "Nike SuperRep Cycle 2 Next Nature",
+                    "url": "{countryLang}/t/superrep-cycle-2-next-nature-womens-indoor-cycling-shoes-cqGbFr/DH3395-001"
+                }
+            ],
+            "pages": {
+                "prev": "",
+                "next": "/product_feed/rollup_threads/v2?filter=marketplace%28US%29&filter=language%28en%29&filter=employeePrice%28true%29&searchTerms=cycling&anchor=1&consumerChannelId=d9a5bc42-4b9c-4976-858a-f159cf99c647&count=1",
+                "totalPages": 35,
+                "totalResources": 35,
+                "searchSummary": {
+                    "originalTerms": "cycling"
+                }
+            },
+            "externalResponses": null,
+            "traceId": "4cf82d54c715e666, 4cf82d54c715e666"
+        }
+    }
+}

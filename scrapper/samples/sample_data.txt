@@ -1,0 +1,106 @@
+
+
+- Marking with # are unique properties
+- Marking with · are dictionaries
+- Marking with ^ parent properties
+- Marking with @ repeated parent properties
+
+- ADD PROPERTY isMain when UID is repeated twice
+- Split Property for UID
+
+   ______________________                                                   ______________________               _________________________            __________________________
+   ###                                                                      ^^^^^^^^^^^                          ^^^^^^^^^                            ^^^^^^^
+   composite key
+   parent cloudProdID + child cloudProdID                                   parentCloudId                        parent id (not cloud)                last segment of the parent id
+  ,UID                                                                     ,cloudProdID                         ,productID                           ,shortID
+ 0,f0a2dfed-0632-5e1c-a70a-c0e4ce541100f0a2dfed-0632-5e1c-a70a-c0e4ce541100,f0a2dfed-0632-5e1c-a70a-c0e4ce541100,b4a96baa-7c4f-4d87-9f1d-a438f912fd0a,a438f912fd0a
+ 1,f0a2dfed-0632-5e1c-a70a-c0e4ce541100c8d07ae8-c8a3-5f51-ab0f-a31f9e5a678a,f0a2dfed-0632-5e1c-a70a-c0e4ce541100,b4a96baa-7c4f-4d87-9f1d-a438f912fd0a,a438f912fd0a
+ 2,f0a2dfed-0632-5e1c-a70a-c0e4ce541100a39e554f-c501-5ca3-8688-7c4be1141ede,f0a2dfed-0632-5e1c-a70a-c0e4ce541100,b4a96baa-7c4f-4d87-9f1d-a438f912fd0a,a438f912fd0a
+ 3,1c4654ba-1c0a-5011-8b8a-f4b026e44c881c4654ba-1c0a-5011-8b8a-f4b026e44c88,1c4654ba-1c0a-5011-8b8a-f4b026e44c88,60497379-4857-4c08-9e75-4729eb7c272f,4729eb7c272f
+ 4,c76d4c04-0fac-524a-93ba-91d5762ab978c76d4c04-0fac-524a-93ba-91d5762ab978,c76d4c04-0fac-524a-93ba-91d5762ab978,d3dcf711-415d-454c-a7e0-3c4450f00645,3c4450f00645
+ 5,1d9a7cbf-0e2d-5929-923b-2399295294c71d9a7cbf-0e2d-5929-923b-2399295294c7,1d9a7cbf-0e2d-5929-923b-2399295294c7,9e4c67a6-0c3e-4f76-a278-3d66d547dd06,3d66d547dd06
+ 6,1d9a7cbf-0e2d-5929-923b-2399295294c7f12a3f40-e6bb-5865-b6af-19005509ad1e,1d9a7cbf-0e2d-5929-923b-2399295294c7,9e4c67a6-0c3e-4f76-a278-3d66d547dd06,3d66d547dd06
+ 7,1d9a7cbf-0e2d-5929-923b-2399295294c7946d4fc2-50c3-559c-8ec2-87b777594da6,1d9a7cbf-0e2d-5929-923b-2399295294c7,9e4c67a6-0c3e-4f76-a278-3d66d547dd06,3d66d547dd06
+ 8,1d9a7cbf-0e2d-5929-923b-2399295294c7c4d83c80-3e54-52dc-8972-a732fe101769,1d9a7cbf-0e2d-5929-923b-2399295294c7,9e4c67a6-0c3e-4f76-a278-3d66d547dd06,3d66d547dd06
+ 9,10427ca3-ec46-51cd-8853-65194d93588510427ca3-ec46-51cd-8853-65194d935885,10427ca3-ec46-51cd-8853-65194d935885,6cf32381-f998-487e-9c97-60e71ed8aef5,60e71ed8aef5
+10,61c1a6e6-90ec-5a78-8dcf-1d24d4b26f9c61c1a6e6-90ec-5a78-8dcf-1d24d4b26f9c,61c1a6e6-90ec-5a78-8dcf-1d24d4b26f9c,e37f504f-2adc-4e64-8989-dd404c8fcb81,dd404c8fcb81
+
+ ________   ____________             __________________        ________   _______      
+ ········   ^^^^^                    ^^^^^^^^                  ^^^····    ^^··         @@@@@@@@    @@@@@@@@@    @@@@@@@@@@@@     ^^^^^^^^  @@@@@@@@
+ colorNum is key for TopColor + color-Description                                                                                Discount  Parent color
+,colorNum  ,title                   ,subtitle                 ,category   ,type       ,currency   ,fullPrice   ,currentPrice    ,sale     ,TopColor
+,1         ,Nike SuperRep Cycle 2   ,Women's ICycling Shoes   ,cycling    ,FOOTWEAR   ,USD        ,120         ,120.0           ,False    ,Black/Volt/Anthracite/White
+,2         ,Nike SuperRep Cycle 2   ,Women's ICycling Shoes   ,cycling    ,FOOTWEAR   ,USD        ,120         ,120.0           ,False    ,Black/Volt/Anthracite/White
+,3         ,Nike SuperRep Cycle 2   ,Women's ICycling Shoes   ,cycling    ,FOOTWEAR   ,USD        ,120         ,120.0           ,False    ,Black/Volt/Anthracite/White
+,1         ,Air Jordan 2 Retro      ,Men's Shoes              ,jordan     ,FOOTWEAR   ,USD        ,150         ,150.0           ,False    ,Sail/Light Curry/Cobblestone
+,1         ,Air Jordan 2 Retro      ,Women's Shoes            ,jordan     ,FOOTWEAR   ,USD        ,150         ,150.0           ,False    ,White/Dark Powder Blue/Sail
+,1         ,Air Jordan 1 Mid        ,Women's Shoes            ,jordan     ,FOOTWEAR   ,USD        ,125         ,125.0           ,False    ,Black/Sail/Gym Red
+,2         ,Air Jordan 1 Mid        ,Women's Shoes            ,jordan     ,FOOTWEAR   ,USD        ,125         ,125.0           ,False    ,Black/Sail/Gym Red
+,3         ,Air Jordan 1 Mid        ,Women's Shoes            ,jordan     ,FOOTWEAR   ,USD        ,125         ,125.0           ,False    ,Black/Sail/Gym Red
+,4         ,Air Jordan 1 Mid        ,Women's Shoes            ,jordan     ,FOOTWEAR   ,USD        ,125         ,125.0           ,False    ,Black/Sail/Gym Red
+,1         ,Air Jordan 12 x A Ma    ,Women's Shoes            ,jordan     ,FOOTWEAR   ,USD        ,225         ,225.0           ,False    ,Black/Burgundy Crush/Black  
+,1         ,Jordan 12 x A Ma        ,Little Kids' Shoes       ,jordan     ,FOOTWEAR   ,USD        ,85          ,85.0            ,False    ,Black/Burgundy Crush/Black  
+
+ _______                                                      _________________            ______    ____________    ______________    _______
+ ^^^^^^^                                                      ^^^^^^^^^^^^^^^^^            ^^^^^^    ^^^^^^^^^^^^    ^^^^^^^^^^^^^^    #######                  
+ split
+,channel                                                     ,short_description           ,rating   ,customizable   ,ExtendedSizing   ,inStock
+,"['NikeApp', 'Nike.com', 'Nike Store Experiences']"         ,"Designed ...movement."     ,5        ,False          ,False            ,True
+,"['NikeApp', 'Nike.com', 'Nike Store Experiences']"         ,"Designed ...movement."     ,5        ,False          ,False            ,True
+,"['NikeApp', 'Nike.com', 'Nike Store Experiences']"         ,"Designed ...movement."     ,5        ,False          ,False            ,True
+,"['SNKRS', 'NikeApp', 'Nike.com', 'Nike Store Experiences']","Wear debut in 1986"        ,5        ,False          ,False            ,True
+,"['SNKRS', 'NikeApp', 'Nike.com', 'Nike Store Experiences']","Red gameplay ...greatness.",0        ,False          ,False            ,True
+,"['NikeApp', 'Nike.com', 'Nike Store Experiences']"         ,"The Air Jordan 1 ...feel." ,4.9      ,False          ,False            ,True
+,"['NikeApp', 'Nike.com', 'Nike Store Experiences']"         ,"The Air Jordan 1 ...feel." ,4.9      ,False          ,False            ,True
+,"['NikeApp', 'Nike.com', 'Nike Store Experiences']"         ,"The Air Jordan 1 ...feel." ,4.9      ,False          ,False            ,True
+,"['NikeApp', 'Nike.com', 'Nike Store Experiences']"         ,"The Air Jordan 1 ...feel." ,4.9      ,False          ,False            ,True
+,"['SNKRS', 'NikeApp', 'Nike.com', 'Nike Store Experiences']","It's not about the shoes." ,0        ,False          ,False            ,True
+,"['SNKRS', 'NikeApp', 'Nike.com', 'Nike Store Experiences']","Partnering ...head-start." ,0        ,False          ,False            ,True
+
+ __________    __________    ________    ________    ______    ________  _______________    ___     ____    ___________    _____
+ @@@@@@@@@@    @@@@@@@@@@    ^^^^^^^^    ^^^^^^    ######    ###############    ^^^     ^^^     ^^^^^^^^^^^    @@@@@
+,ComingSoon   ,BestSeller   ,Excluded   ,GiftCard   ,Jersey   ,Launch   ,MemberExclusive   ,NBA    ,NFL    ,Sustainable   ,label
+,False        ,False        ,False      ,False      ,False    ,False    ,False             ,False  ,False  ,True          ,IN_STOCK
+,False        ,False        ,False      ,False      ,False    ,False    ,False             ,False  ,False  ,True          ,IN_STOCK
+,False        ,False        ,False      ,False      ,False    ,False    ,False             ,False  ,False  ,True          ,IN_STOCK
+,False        ,False        ,False      ,False      ,False    ,False    ,False             ,False  ,False  ,False         ,IN_STOCK
+,False        ,False        ,False      ,False      ,False    ,False    ,False             ,False  ,False  ,False         ,IN_STOCK
+,False        ,True         ,False      ,False      ,False    ,False    ,False             ,False  ,False  ,False         ,BEST_SELLER
+,False        ,True         ,False      ,False      ,False    ,False    ,False             ,False  ,False  ,False         ,BEST_SELLER
+,False        ,True         ,False      ,False      ,False    ,False    ,False             ,False  ,False  ,False         ,BEST_SELLER
+,False        ,True         ,False      ,False      ,False    ,False    ,False             ,False  ,False  ,False         ,BEST_SELLER
+,False        ,False        ,False      ,False      ,False    ,False    ,False             ,False  ,False  ,False         ,IN_STOCK
+,False        ,False        ,False      ,False      ,False    ,False    ,False             ,False  ,False  ,False         ,IN_STOCK
+
+ ________________________________________________________________________________________________________________________________________
+ ##########    ^^^^^^^^                                                       ########                                  #################
+ nullable      prefix 'https://www.nike.com'                                  child cloudProdID (1st + last segment)
+,prebuildId   ,prod_url                                                      ,color-ID                                 ,color-Description
+,             ,https://www.nike.com/t/superrep-cycle/DH3395-001              ,f0a2dfed-c0e4ce541100                    ,Black/Volt/Anthracite/White
+,             ,https://www.nike.com/t/superrep-cycle/DH3395-001              ,c8d07ae8-a31f9e5a678a                    ,Crimson Bliss/Total Orange/Pearl White
+,             ,https://www.nike.com/t/superrep-cycle/DH3395-001              ,a39e554f-7c4be1141ede                    ,White/Mint Foam/Laser Blue/Black
+,             ,https://www.nike.com/t/air-jordan-2-mens-LVlsNr/DV9956-118    ,1c4654ba-f4b026e44c88                    ,Sail/Light Curry/Cobblestone/Melon Tint
+,             ,https://www.nike.com/t/air-jordan-2-womens-PRd1BH/DX4401-164  ,c76d4c04-91d5762ab978                    ,White/Dark Powder Blue/Sail/Gym Red
+,             ,https://www.nike.com/t/air-jordan-1/BQ6472-061                ,1d9a7cbf-2399295294c7                    ,Black/Sail/Gym Red
+,             ,https://www.nike.com/t/air-jordan-1/BQ6472-061                ,f12a3f40-19005509ad1e                    ,Cement Grey/Anthracite/Sail
+,             ,https://www.nike.com/t/air-jordan-1/BQ6472-061                ,946d4fc2-87b777594da6                    ,Black/Sail/Dark Concord
+,             ,https://www.nike.com/t/air-jordan-1/BQ6472-061                ,c4d83c80-a732fe101769                    ,Lemon Wash/White/Lapis
+,             ,https://www.nike.com/t/air-jordan-12-women                    ,10427ca3-65194d935885                    ,Black/Burgundy Crush/Black
+,             ,https://www.nike.com/t/jordan-12-kids                         ,61c1a6e6-1d24d4b26f9c                    ,Black/Burgundy Crush/Black
+
+ ________________________________________________________________________________________________________________________
+ ###############   ##################    ##############    ################    #############    #####################    #########     #####······     ###############
+,color-FullPrice  ,color-CurrentPrice   ,color-Discount   ,color-BestSeller   ,color-InStock   ,color-MemberExclusive   ,color-New    ,color-Label   ,color-Image-url
+,120              ,120.0                ,False            ,False              ,True            ,False                   ,False        ,IN_STOCK      ,"https://static.nike.com/a/images/c_limit,w_400,f_auto/t_product_v1/86561b82-0252-414b-a352-109e6afe4082/image.jpg"
+,120              ,84.97                ,True             ,False              ,True            ,False                   ,False        ,IN_STOCK      ,"https://static.nike.com/a/images/c_limit,w_400,f_auto/t_product_v1/a543d864-b701-4cf5-b035-8f36c974c212/image.jpg"
+,120              ,92.97                ,True             ,False              ,True            ,False                   ,False        ,IN_STOCK      ,"https://static.nike.com/a/images/c_limit,w_400,f_auto/t_product_v1/cdb14a51-6641-498e-9959-46422a2568f0/image.jpg"
+,150              ,150.0                ,False            ,False              ,True            ,False                   ,False        ,IN_STOCK      ,"https://static.nike.com/a/images/c_limit,w_400,f_auto/t_product_v1/18e48a78-6740-4f18-a103-04c299e37be5/image.jpg"
+,150              ,150.0                ,False            ,False              ,True            ,False                   ,False        ,IN_STOCK      ,"https://static.nike.com/a/images/c_limit,w_400,f_auto/t_product_v1/fdcbac72-e321-4fb0-a52f-ab549f69947a/image.jpg"
+,125              ,125.0                ,False            ,True               ,True            ,False                   ,False        ,BEST_SELLER   ,"https://static.nike.com/a/images/c_limit,w_400,f_auto/t_product_v1/a683d06f-ee77-4cc8-a2d1-d50db742e55e/image.jpg"
+,125              ,125.0                ,False            ,True               ,True            ,False                   ,False        ,IN_STOCK      ,"https://static.nike.com/a/images/c_limit,w_400,f_auto/t_product_v1/7815ef11-1c6f-482e-92cc-012c26d38271/image.jpg"
+,125              ,125.0                ,False            ,True               ,True            ,False                   ,False        ,IN_STOCK      ,"https://static.nike.com/a/images/c_limit,w_400,f_auto/t_product_v1/fd5bb2e8-2384-4aa5-a01b-5e6f3684f4e2/image.jpg"
+,125              ,125.0                ,False            ,True               ,True            ,False                   ,False        ,IN_STOCK      ,"https://static.nike.com/a/images/c_limit,w_400,f_auto/t_product_v1/b31aeb85-0ff0-4735-95e6-8ab92dbfefec/image.jpg"
+,225              ,225.0                ,False            ,False              ,True            ,False                   ,False        ,IN_STOCK      ,"https://static.nike.com/a/images/c_limit,w_400,f_auto/t_product_v1/69d48063-ce2c-411b-b6bd-b28f713b995f/image.jpg"
+,85               ,85.0                 ,False            ,False              ,True            ,False                   ,False        ,IN_STOCK      ,"https://static.nike.com/a/images/c_limit,w_400,f_auto/t_product_v1/ef352f30-dd6d-4374-b208-a7f3653481fb/image.jpg"
+
+
