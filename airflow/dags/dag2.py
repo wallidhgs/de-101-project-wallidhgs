@@ -60,6 +60,8 @@ def get_key(val: str):
     val_hex = val_hash.hexdigest()[:20]
     val_key = int(f"0x{val_hex}", 0)
     return val_key
+def get_color_full_uid(uid: str, parent_uid: str):
+    return uid.replace(parent_uid, '')
 def insert_snowflake(df: pandas.DataFrame, table_name: str, columns: list, column_compare: list):
     print(f"Inserting into '{table_name}'...")
 
@@ -99,7 +101,10 @@ def load_products_file(s3_file):
     file_name = split_uri[-1].replace(FILE_PREX, '').replace(FILE_EXTENSION, '')
     print(f'file_name: {file_name}')
     df = read_s3_csv(key=s3_file)
-    print('file_json_obtained...')
+    
+    print('adding additional properties...')
+    df['color_full_uid'] = df.apply(lambda row: get_color_full_uid(row['UID']), axis=1)
+
     ret = df.to_csv()
     return ret
 
@@ -114,8 +119,9 @@ def list_products():
 
 @task
 def load_currency(df_csv):
-    df = pandas.read_csv(df_csv)
-    print('loading currency')
+    print('Parsing data frame')
+    df = pandas.read_csv(StringIO(df_csv))
+    print('Setting parameters')
     table_name = 'currency_dim'
     columns = [
         {'name': 'id', 'wrapper': False},
@@ -125,24 +131,76 @@ def load_currency(df_csv):
     column_names = []
     for col in columns: column_names.append(col['name'])
     print('adding column id')
-    df['currency_id'] = df.apply(lambda row: get_key(row['currency']), axis=1)
+    column_id_name = 'currency'
+    new_column_id_name = 'currency_id'
+    df[new_column_id_name] = df.apply(lambda row: get_key(row[column_id_name]), axis=1)
     print('creating filtered dataframe')
-    new_df = df.filter(items=['currency_id', 'currency']).drop_duplicates()
+    new_df = df.filter(items=[new_column_id_name, column_id_name]).drop_duplicates()
     print('inserting into snowflake')
     insert_snowflake(new_df, table_name, columns, column_compare)
     print('inserted into snowflake')
-    return new_df
+    return new_df.to_csv()
 
+@task
+def load_product_type(df_csv):
+    print('Parsing data frame')
+    df = pandas.read_csv(StringIO(df_csv))
+    print('Setting parameters')
+    table_name = 'product_type_dim'
+    columns = [
+        {'name': 'id', 'wrapper': False},
+        {'name': 'name', 'wrapper': True} # wrapper for including "" quotes
+    ]
+    column_compare = ['id']
+    column_names = []
+    for col in columns: column_names.append(col['name'])
+    print('adding column id')
+    column_id_name = 'type'
+    new_column_id_name = 'product_type_id'
+    df[new_column_id_name] = df.apply(lambda row: get_key(row[column_id_name]), axis=1)
+    print('creating filtered dataframe')
+    new_df = df.filter(items=[new_column_id_name, column_id_name]).drop_duplicates()
+    print('inserting into snowflake')
+    insert_snowflake(new_df, table_name, columns, column_compare)
+    print('inserted into snowflake')
+    return new_df.to_csv()
+
+@task
+def load_channel(df_csv):
+    print('Parsing data frame')
+    df = pandas.read_csv(StringIO(df_csv))
+    
+    return df.to_csv()
+    # print('Setting parameters')
+    # table_name = 'product_type_dim'
+    # columns = [
+    #     {'name': 'id', 'wrapper': False},
+    #     {'name': 'name', 'wrapper': True} # wrapper for including "" quotes
+    # ]
+    # column_compare = ['id']
+    # column_names = []
+    # for col in columns: column_names.append(col['name'])
+    # print('adding column id')
+    # column_id_name = 'type'
+    # new_column_id_name = 'product_type_id'
+    # df[new_column_id_name] = df.apply(lambda row: get_key(row[column_id_name]), axis=1)
+    # print('creating filtered dataframe')
+    # new_df = df.filter(items=[new_column_id_name, column_id_name]).drop_duplicates()
+    # print('inserting into snowflake')
+    # insert_snowflake(new_df, table_name, columns, column_compare)
+    # print('inserted into snowflake')
+    # return new_df.to_csv()
+# 
 with DAG('de_project_dag3', default_args=default_args, schedule_interval=None) as dag:
     product_list_s3 = list_products()
     df_csvs = load_products_file.expand(s3_file=product_list_s3)
-    currency_dfs = load_currency.expand(df_csv=df_csvs)
-    # load_product_type(df=df)
-    # load_channel(df=df)
-    # load_label(df=df)
+    # currency_dfs = load_currency.expand(df_csv=df_csvs)
+    product_type_dfs = load_product_type.expand(df_csv=df_csvs)
+    # load_channel.expand(df_csv=df_csvs)
+    # load_label.expand(df_csv=df_csvs)
 
-    # load_category(df=df) # depends on product type
+    # load_category.expand(df_csv=df_csvs) # depends on product type
 
-    # load_product(df=df) # depends on label & category
-    # load_product_channel(df=df) # depends on product & channel
-    # load_color(df=df) # depends on product & currency
+    # load_product.expand(df_csv=df_csvs) # depends on label & category
+    # load_product_channel.expand(df_csv=df_csvs) # depends on product & channel
+    # load_color.expand(df_csv=df_csvs) # depends on product & currency
