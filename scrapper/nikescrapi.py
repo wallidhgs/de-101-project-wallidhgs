@@ -5,11 +5,9 @@ import numpy as np
 import os
 import shutil
 
-from os import path
-from tqdm import tqdm, trange
-from time import sleep
+from tqdm import tqdm
 from bs4 import BeautifulSoup  
-from datetime import date, datetime
+from datetime import datetime
 
 class NikeScrAPI:   
     '''

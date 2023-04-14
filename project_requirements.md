@@ -2,6 +2,8 @@
 
 Project for DE-101 Course
 
+Original requirement on: [DE-101-Project][original_requirements]
+
 ## Project Objective
 
 The objective of this project is to consume data from the Nike API provided on the nikescrapi.py file, build a data pipeline to insert the API data into a data warehouse, and create a data warehouse structure to store the data. Finally, we will write necessary queries to make reports from the data warehouse.
@@ -9,7 +11,7 @@ The objective of this project is to consume data from the Nike API provided on t
 The project is divided into the following phases:
 
 1. **Data Ingestion**:
-   In this phase, we will ingest the data from the Nike API provided in the nikescrapi.py file.
+   In this phase, we will ingest the data from the Nike API provided in the [nikescrapi.py][file_nikescrapi] file.
 2. **Data Processing**:
    In this phase, we will process the data using airflow as orchestrator or any other tool or framework. We will clean, transform, and aggregate the data as per the requirements.
 3. **Data Ingestion into Data Warehouse**:
@@ -36,11 +38,11 @@ The project is divided into the following phases:
 4. Query the top 5 sales by title and subtitle agrupation
 5. Query the top 3 products that has greatest sales by category
 
-## Considerations
+### Considerations
 
 - For all the phases, is open to use any framework and tool as your convenience
 - It can be only extracted once the data from nikescrapi, no date consideration is needed
-- The nikescrapi.py contains the code to ingest Nike API Data, here is a sample code to use it:
+- The [nikescrapi.py][file_nikescrapi] contains the code to ingest Nike API Data, here is a sample code to use it:
 
 ```py
 # Scrape Nike!
@@ -56,7 +58,7 @@ nike.info()
 ```
 
 For more information to use the API, here is a sample Repo of the Usage:
-<https://github.com/artexmg/NikeScrAPI>
+[NikeScrAPI][NikeScrAPI]
 
 ## Deliverables
 
@@ -64,5 +66,6 @@ For more information to use the API, here is a sample Repo of the Usage:
 2. For the Datawarehouse, put on a file the DDL statements that were used to create the tables
 3. For the Queries of the Datawarehouse, put on a file the Queries statements requested on the `Querying the Datawarehouse phase`
 
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-8d59dc4de5201274e310e4c54b9627a8934c3b88527886e3b421487c677d23eb.svg)](https://classroom.github.com/a/YXakmyNP)
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-c66648af7eb3fe8bc4f294546bfd86ef473780cde1dea487d3c4ff354943c9ae.svg)](https://classroom.github.com/online_ide?assignment_repo_id=10740738&assignment_repo_type=AssignmentRepo)
+[original_requirements]: https://github.com/enriquedevs/DE-101-Project
+[NikeScrAPI]: https://github.com/artexmg/NikeScrAPI
+[file_nikescrapi]: scrapper/nikescrapi.py

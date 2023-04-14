@@ -6,10 +6,6 @@ from sales_generator import SalesGenerator
 nikeAPI = NikeScrAPI(max_pages=1, path='data/products')
 df = nikeAPI.getData()
 
-# import pandas
-# csv_input='data/products/nike_11APR2023_1413.csv'
-# df = pandas.read_csv(csv_input)
-
 # Sales generator
 min_sales=0 # minimum tickets for each day sales
 max_sales=5 # maximum tickets for each day sales

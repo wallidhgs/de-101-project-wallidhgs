@@ -4,6 +4,10 @@ import random
 import os
 
 class SalesGenerator():
+    """
+    min_qty: Minimum items per ticket (must not be zero)
+    max_qty: Maximum items per ticket (must be non zero and equal or higher than min_sales)
+    """
     __min_qty = 1
     __max_qty = 5
     __column_names = ['UID', 'currency', 'sales', 'quantity', 'date']
@@ -15,14 +19,18 @@ class SalesGenerator():
                  max_sales: int,
                  path='data/sales',
                  chance=2):
-        print('\nnike_df')
-        print(nike_df)
-        print('\n\n')
+        """
+        nike_df: Dataframe from NikeScrAPI.getData()
+        min_sales: minimum ammount of ticket per product per day (can be zero)
+        max_sales: maximum ammount of ticket per product per day (must be non zero and equal or higher than min_sales)
+        path: output folder (suggested default value),
+        chance: chance of not selling an item per day (1/n) chance of occurring (if this occurs the min_sales and max_sales are not applied)
+        """
         self.__df = nike_df
         self.__min = min_sales
         self.__max = max_sales
         self.__path = path
-        self.__chance = chance  # chance of a record of being generated 1/n for every product
+        self.__chance = chance  # chance of a record of NOT being generated 1/n for every day/product
 
     def __generate_day(self, day: date):
         df = pandas.DataFrame([], columns=self.__column_names)

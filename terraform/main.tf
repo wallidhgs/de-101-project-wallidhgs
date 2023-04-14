@@ -13,11 +13,11 @@ provider "aws" {
 }
 
 locals {
-  aws_profile= "de_project" # must be the same as aws profile provider
+  aws_profile           = "de_project" # must be the same as aws profile provider
   project_name          = "de-project"
   resource_name         = "${local.project_name}-${var.env}"
-  scrapper_folder          = "../scrapper/data"
-  remote_folder          = "/data"
+  scrapper_folder       = "../scrapper/data"
+  remote_folder         = "/data"
   log_retention_in_days = 3
   tags = {
     project    = local.project_name

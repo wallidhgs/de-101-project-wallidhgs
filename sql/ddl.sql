@@ -125,6 +125,7 @@ CREATE TABLE color_dim
     REFERENCES currency_dim (id) NOT ENFORCED,
 );
 
+-- SALES
 CREATE TABLE date_dim
 (
   id INTEGER PRIMARY KEY,

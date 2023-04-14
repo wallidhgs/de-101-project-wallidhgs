@@ -7,3 +7,5 @@ terraform/.terraform/providers/registry.terraform.io/hashicorp
 terraform/terraform.tfstate
 terraform/terraform.tfstate.backup
 terraform/.terraform.lock.hcl
+airflow/dags/__pycache__
+airflow/logs
