@@ -64,4 +64,14 @@ t3 = PythonOperator(
     dag=dag
 )
 
+# list_s3 >> transform(listado)
+#             hilo >> inserts
+#             hilo >> inserts
+#             hilo >> insert
+# 
+# def fun()
+#     TaskGroup
+#     for
+#         PythonOperator
+
 t1 >> t2 >> t3

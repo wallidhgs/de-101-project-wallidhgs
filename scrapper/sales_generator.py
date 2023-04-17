@@ -52,7 +52,7 @@ class SalesGenerator():
     def __create_folders(self, date: date):
         path = '{path}/{date_folder}'.format(
             path=self.__path,
-            date_folder=date.strftime('%Y/%m')
+            date_folder=date.strftime('%Y/%m/%d')
             )
         if not os.path.exists(path):
             os.makedirs(path)
@@ -62,8 +62,7 @@ class SalesGenerator():
         day_count = (end - start).days + 1
         for single_date in (start + timedelta(n) for n in range(day_count)):
           df = self.__generate_day(single_date)
-          file_name="{}{}.csv".format(self.__file_prefix, single_date.strftime('%d'))
+          file_name="{}{}.csv".format(self.__file_prefix, single_date.strftime('%Y_%m_%d'))
           path = self.__create_folders(single_date)
           file_full_path = os.path.join(path,file_name)
           df.to_csv(file_full_path)
-      

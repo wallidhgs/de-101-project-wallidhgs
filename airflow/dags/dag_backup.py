@@ -18,8 +18,7 @@ BUCKET_PREFIX = 'data/'
 PRODUCTS_PREFIX = f'{BUCKET_PREFIX}products/'
 SALES_PREFIX = f'{BUCKET_PREFIX}sales/'
 
-PRODUCT_FILE_PREFIX = 'nike_'
-SALES_FILE_PREFIX = 'nike_sales_'
+FILE_PREX = 'nike_'
 FILE_EXTENSION = '.csv'
 
 default_args = {
@@ -63,8 +62,11 @@ def get_key(val: str):
     val_hex = val_hash.hexdigest()[:20]
     val_key = int(f"0x{val_hex}", 0)
     return val_key
-def get_color_full_uid(uid: str):
-    return uid[-36:]
+def get_color_full_uid(uid: str, parent_uid: str):
+    replaced = uid.replace(parent_uid, '')
+    if replaced == '':
+        return parent_uid
+    return replaced
 def insert_snowflake(df: pandas.DataFrame, table_name: str, columns: list, column_compare: list):
     print(f"Inserting into '{table_name}'...")
 
@@ -106,12 +108,12 @@ WHEN NOT MATCHED THEN INSERT ({column_names}) VALUES ({col_insert});"""
 @task
 def load_products_file(s3_file):
     split_uri = s3_file.split('/')
-    file_name = split_uri[-1].replace(PRODUCT_FILE_PREFIX, '').replace(FILE_EXTENSION, '')
+    file_name = split_uri[-1].replace(FILE_PREX, '').replace(FILE_EXTENSION, '')
     print(f'file_name: {file_name}')
     df = read_s3_csv(key=s3_file)
     
     print('adding additional properties...')
-    df['color_full_uid'] = df.apply(lambda row: get_color_full_uid(row['UID']), axis=1)
+    df['color_full_uid'] = df.apply(lambda row: get_color_full_uid(row['UID'], row['cloudProdID']), axis=1)
 
     ret = df.to_csv()
     return ret
@@ -407,122 +409,17 @@ def load_color(df_csv):
     print('inserted into snowflake')
     return new_df.to_csv()
 
-########################################
 
-@task
-def sales_list_s3():
-    print('Listing product files')
-    result = s3_client.list_objects_v2(Bucket=BUCKET, Prefix=SALES_PREFIX)
-
-    s3_files = []
-    for single_file in result['Contents']: s3_files.append(single_file['Key'])
-    return s3_files
-
-@task
-def load_sales_file(s3_file):
-    split_uri = s3_file.split('/')
-    file_name = split_uri[-1].replace(SALES_FILE_PREFIX, '').replace(FILE_EXTENSION, '')
-    print(f'file_name: {file_name}')
-    df = read_s3_csv(key=s3_file)
-    
-    # print('adding additional properties...')
-    # df['color_full_uid'] = df.apply(lambda row: get_color_full_uid(row['UID'], row['cloudProdID']), axis=1)
-
-    ret = df.to_csv()
-    return ret
-
-@task
-def load_date(s3_file):
-    table_name = 'date_dim'
-    columns = [
-        {'name': 'id', 'wrapper': False},
-        {'name': 'year', 'wrapper': False},
-        {'name': 'month', 'wrapper': False},
-        {'name': 'day', 'wrapper': False}
-    ]
-    column_compare = ['id']
-
-    split_uri = s3_file.split('/')
-    file_name = split_uri[-1].replace(SALES_FILE_PREFIX, '').replace(FILE_EXTENSION, '')
-    print(f'file_name: {file_name}')
-
-    file_name_split = file_name.split('_')
-
-    year = file_name_split[-3]
-    month = file_name_split[-2]
-    day = file_name_split[-1]
-
-    column_names = []
-    for col in columns: column_names.append(col['name'])
-
-    key = get_key('{year}{month}{day}'.format(
-        year = year,
-        month = month,
-        day = day
-    ))
-    df = pandas.DataFrame([(key, year, month, day)], columns=column_names)
-    insert_snowflake(df, table_name, columns, column_compare)
-    return df.to_csv()
-
-def key_date(date, char):
-    date_split = date.split(char)
-
-    year = date_split[-3]
-    month = date_split[-2]
-    day = date_split[-1]
-    
-
-    key = get_key('{year}{month}{day}'.format(
-        year = year,
-        month = month,
-        day = day
-    ))
-    return key
-    
-@task
-def load_sale(df_csv):
-    print('Parsing data frame')
-    df = pandas.read_csv(StringIO(df_csv))
-    print('Setting parameters')
-    table_name = 'sales_fact'
-    columns = [
-        {'name': 'id', 'wrapper': False},
-        {'name': 'sales', 'wrapper': False},
-        {'name': 'date', 'wrapper': False},
-        {'name': 'product', 'wrapper': True} # FK
-    ]
-    column_compare = ['id']
-    column_names = []
-    for col in columns: column_names.append(col['name'])
-    print('adding column id')
-    df['product_color_id'] = df.apply(lambda row: get_color_full_uid(row['UID']), axis=1)
-    df['sales_id'] = df.apply(lambda row: get_key('{product}{date}'.format(
-        product=row['UID'],
-        date=row['date']
-    )), axis=1)
-    df['date_id'] = df.apply(lambda row: key_date(row['date'], '-'), axis=1)
-    print('creating filtered dataframe')
-    new_df = df.filter(items=['sales_id', 'sales', 'date_id', 'product_color_id'])
-    print('inserting into snowflake')
-    insert_snowflake(new_df, table_name, columns, column_compare)
-    print('inserted into snowflake')
-    return new_df.to_csv()
-
-with DAG('a_de_project_dag3', default_args=default_args, schedule_interval=None) as dag:
+with DAG('de_project_backup', default_args=default_args, schedule_interval=None) as dag:
     product_list_s3 = list_products()
-    product_df_csvs = load_products_file.expand(s3_file=product_list_s3)
-    currency_dfs = load_currency.expand(df_csv=product_df_csvs)
-    product_type_dfs = load_product_type.expand(df_csv=product_df_csvs)
-    channel_dfs = load_channel.expand(df_csv=product_df_csvs)
-    label_dfs = load_label.expand(df_csv=product_df_csvs)
+    df_csvs = load_products_file.expand(s3_file=product_list_s3)
+    currency_dfs = load_currency.expand(df_csv=df_csvs)
+    product_type_dfs = load_product_type.expand(df_csv=df_csvs)
+    channel_dfs = load_channel.expand(df_csv=df_csvs)
+    label_dfs = load_label.expand(df_csv=df_csvs)
     
     # Since FK are deactivated in snowflake, these can be created in paralel threads
-    category_dfs = load_category.expand(df_csv=product_df_csvs) # depends on product type
-    product_dfs = load_product.expand(df_csv=product_df_csvs) # depends on label & category
-    load_product_channel.expand(df_csv=product_df_csvs) # depends on product & channel
-    load_color.expand(df_csv=product_df_csvs) # depends on product & currency
-    ############################################
-    sales_list_s3 = sales_list_s3()
-    sales_df_csvs = load_sales_file.expand(s3_file=sales_list_s3)
-    date_csvs = load_date.expand(s3_file=sales_list_s3)
-    sales_csvs = load_sale.expand(df_csv=sales_df_csvs) # depends on date
+    category_dfs = load_category.expand(df_csv=df_csvs) # depends on product type
+    product_dfs = load_product.expand(df_csv=df_csvs) # depends on label & category
+    load_product_channel.expand(df_csv=df_csvs) # depends on product & channel
+    load_color.expand(df_csv=df_csvs) # depends on product & currency

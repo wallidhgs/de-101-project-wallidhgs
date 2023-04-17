@@ -1,6 +1,17 @@
 USE WAREHOUSE COMPUTE_WH;
 
 /*
+TRUNCATE sales_fact;
+TRUNCATE date_dim;
+TRUNCATE color_dim;
+TRUNCATE product_dim;
+TRUNCATE product_channel_dim;
+TRUNCATE label_dim;
+TRUNCATE channel_dim;
+TRUNCATE category_dim;
+TRUNCATE product_type_dim;
+TRUNCATE currency_dim;
+
 DROP TABLE sales_fact;
 DROP TABLE date_dim;
 DROP TABLE color_dim;
@@ -28,12 +39,12 @@ CREATE TABLE product_type_dim
 CREATE TABLE category_dim
 (
   id INTEGER PRIMARY KEY,
-  name VARCHAR(50) NOT NULL
+  name VARCHAR(50) NOT NULL,
 
   product_type INTEGER,
   CONSTRAINT product_type_fkey
     FOREIGN KEY (product_type)
-    REFERENCES product_type_dim (id) NOT ENFORCED,
+    REFERENCES product_type_dim (id) NOT ENFORCED
 );
 
 CREATE TABLE channel_dim
@@ -80,15 +91,15 @@ CREATE TABLE product_dim
   url VARCHAR,
 
 
-  label,
+  label INTEGER,
   CONSTRAINT label_fkey
     FOREIGN KEY (label)
     REFERENCES label_dim (id) NOT ENFORCED,
 
-  category,
+  category INTEGER,
   CONSTRAINT category_fkey
     FOREIGN KEY (category)
-    REFERENCES category_dim (id) NOT ENFORCED,
+    REFERENCES category_dim (id) NOT ENFORCED
 
 );
 
@@ -116,13 +127,13 @@ CREATE TABLE color_dim
 
   product VARCHAR(36) NOT NULL,
   CONSTRAINT product_fkey
-    FOREIGN KEY (parent_product)
+    FOREIGN KEY (product)
     REFERENCES product_dim (id) NOT ENFORCED,
 
-  currency,
+  currency INTEGER,
   CONSTRAINT currency_fkey
-    FOREIGN KEY (currency_type)
-    REFERENCES currency_dim (id) NOT ENFORCED,
+    FOREIGN KEY (currency)
+    REFERENCES currency_dim (id) NOT ENFORCED
 );
 
 -- SALES
@@ -138,12 +149,37 @@ CREATE TABLE sales_fact
 (
   id INTEGER PRIMARY KEY,
   sales DECIMAL(18,2) NOT NULL,
-  date INTEGER NOT NULL PRIMARY KEY,
+  date INTEGER,
   CONSTRAINT date_fkey
     FOREIGN KEY (date)
     REFERENCES date_dim (id) NOT ENFORCED,
-  product VARCHAR(36) NOT NULL PRIMARY KEY,
+  product VARCHAR(36),
   CONSTRAINT product_fkey
     FOREIGN KEY (product)
-    REFERENCES product_dim (id) NOT ENFORCED,
+    REFERENCES product_dim (id) NOT ENFORCED
 );
+
+/*
+SELECT * FROM sales_fact;
+SELECT * FROM date_dim;
+SELECT * FROM color_dim;
+SELECT * FROM product_dim;
+SELECT * FROM product_channel_dim;
+SELECT * FROM label_dim;
+SELECT * FROM channel_dim;
+SELECT * FROM category_dim;
+SELECT * FROM product_type_dim;
+SELECT * FROM currency_dim;
+
+SELECT
+(SELECT COUNT(*) FROM sales_fact) AS  sales_fact,
+(SELECT COUNT(*) FROM date_dim) AS date_dim,
+(SELECT COUNT(*) FROM color_dim) AS color_dim,
+(SELECT COUNT(*) FROM product_dim) AS product_dim,
+(SELECT COUNT(*) FROM product_channel_dim) AS product_channel_dim,
+(SELECT COUNT(*) FROM label_dim) AS label_dim,
+(SELECT COUNT(*) FROM channel_dim) AS channel_dim,
+(SELECT COUNT(*) FROM category_dim) AS category_dim,
+(SELECT COUNT(*) FROM product_type_dim) AS product_type_dim,
+(SELECT COUNT(*) FROM currency_dim) AS currency_dim;
+*/
