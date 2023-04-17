@@ -112,6 +112,15 @@ def load_products_file(s3_file):
     
     print('adding additional properties...')
     df['color_full_uid'] = df.apply(lambda row: get_color_full_uid(row['UID']), axis=1)
+    df['currency_id'] = df.apply(lambda row: get_key(row['currency']), axis=1)
+    df['product_type_id'] = df.apply(lambda row: get_key(row['type']), axis=1)
+    df['label_id'] = df.apply(lambda row: get_key(row['label']), axis=1)
+    df['category_id'] = df.apply(lambda row: get_key('{r_category}{r_type}'.format(
+        r_category=row['category'],
+        r_type=row['type'],
+    )), axis=1)
+    df['type_id'] = df.apply(lambda row: get_key(row['type']), axis=1)
+    df['is_main'] = df.apply(lambda row: row['cloudProdID'] == row['color_full_uid'], axis=1)
 
     ret = df.to_csv()
     return ret
@@ -138,12 +147,8 @@ def load_currency(df_csv):
     column_compare = ['id']
     column_names = []
     for col in columns: column_names.append(col['name'])
-    print('adding column id')
-    column_id_name = 'currency'
-    new_column_id_name = 'currency_id'
-    df[new_column_id_name] = df.apply(lambda row: get_key(row[column_id_name]), axis=1)
     print('creating filtered dataframe')
-    new_df = df.filter(items=[new_column_id_name, column_id_name]).drop_duplicates()
+    new_df = df.filter(items=['currency_id', 'currency']).drop_duplicates()
     print('inserting into snowflake')
     insert_snowflake(new_df, table_name, columns, column_compare)
     print('inserted into snowflake')
@@ -162,12 +167,8 @@ def load_product_type(df_csv):
     column_compare = ['id']
     column_names = []
     for col in columns: column_names.append(col['name'])
-    print('adding column id')
-    column_id_name = 'type'
-    new_column_id_name = 'product_type_id'
-    df[new_column_id_name] = df.apply(lambda row: get_key(row[column_id_name]), axis=1)
     print('creating filtered dataframe')
-    new_df = df.filter(items=[new_column_id_name, column_id_name]).drop_duplicates()
+    new_df = df.filter(items=['product_type_id', 'type']).drop_duplicates()
     print('inserting into snowflake')
     insert_snowflake(new_df, table_name, columns, column_compare)
     print('inserted into snowflake')
@@ -218,12 +219,8 @@ def load_label(df_csv):
     column_compare = ['id']
     column_names = []
     for col in columns: column_names.append(col['name'])
-    print('adding column id')
-    column_id_name = 'label'
-    new_column_id_name = 'label_id'
-    df[new_column_id_name] = df.apply(lambda row: get_key(row[column_id_name]), axis=1)
     print('creating filtered dataframe')
-    new_df = df.filter(items=[new_column_id_name, column_id_name]).drop_duplicates()
+    new_df = df.filter(items=['label_id', 'label']).drop_duplicates()
     print('inserting into snowflake')
     insert_snowflake(new_df, table_name, columns, column_compare)
     print('inserted into snowflake')
@@ -243,12 +240,6 @@ def load_category(df_csv):
     column_compare = ['id']
     column_names = []
     for col in columns: column_names.append(col['name'])
-    print('adding column id')
-    df['category_id'] = df.apply(lambda row: get_key('{r_category}{r_type}'.format(
-        r_category=row['category'],
-        r_type=row['type'],
-    )), axis=1)
-    df['type_id'] = df.apply(lambda row: get_key(row['type']), axis=1)
     print('creating filtered dataframe')
     new_df = df.filter(items=['category_id', 'category', 'type_id']).drop_duplicates()
     print('inserting into snowflake')
@@ -278,18 +269,12 @@ def load_product(df_csv):
         {'name': 'sustainable', 'wrapper': False},
         {'name': 'url', 'wrapper': True},
 
-        {'name': 'label', 'wrapper': False},
         {'name': 'category', 'wrapper': False},
+        {'name': 'label', 'wrapper': False},
     ]
     column_compare = ['id']
     column_names = []
     for col in columns: column_names.append(col['name'])
-    print('adding column id')
-    df['category_id'] = df.apply(lambda row: get_key('{r_category}{r_type}'.format(
-        r_category=row['category'],
-        r_type=row['type'],
-    )), axis=1)
-    df['label_id'] = df.apply(lambda row: get_key(row['label']), axis=1)
     print('creating filtered dataframe')
     new_df = df.filter(items=[
         'cloudProdID',
@@ -377,9 +362,6 @@ def load_color(df_csv):
     column_compare = ['id']
     column_names = []
     for col in columns: column_names.append(col['name'])
-    df['is_main'] = df.apply(lambda row: row['cloudProdID'] == row['color_full_uid'], axis=1)
-    df['currency_id'] = df.apply(lambda row: get_key(row['currency']), axis=1)
-
     print('creating filtered dataframe')
     new_df = df.filter(items=[
         'color_full_uid',
@@ -425,8 +407,13 @@ def load_sales_file(s3_file):
     print(f'file_name: {file_name}')
     df = read_s3_csv(key=s3_file)
     
-    # print('adding additional properties...')
-    # df['color_full_uid'] = df.apply(lambda row: get_color_full_uid(row['UID'], row['cloudProdID']), axis=1)
+    print('adding additional properties...')
+    df['product_color_id'] = df.apply(lambda row: get_color_full_uid(row['UID']), axis=1)
+    df['sales_id'] = df.apply(lambda row: get_key('{product}{date}'.format(
+        product=row['UID'],
+        date=row['date']
+    )), axis=1)
+    df['date_id'] = df.apply(lambda row: key_date(row['date'], '-'), axis=1)
 
     ret = df.to_csv()
     return ret
@@ -494,13 +481,6 @@ def load_sale(df_csv):
     column_compare = ['id']
     column_names = []
     for col in columns: column_names.append(col['name'])
-    print('adding column id')
-    df['product_color_id'] = df.apply(lambda row: get_color_full_uid(row['UID']), axis=1)
-    df['sales_id'] = df.apply(lambda row: get_key('{product}{date}'.format(
-        product=row['UID'],
-        date=row['date']
-    )), axis=1)
-    df['date_id'] = df.apply(lambda row: key_date(row['date'], '-'), axis=1)
     print('creating filtered dataframe')
     new_df = df.filter(items=['sales_id', 'sales', 'date_id', 'product_color_id'])
     print('inserting into snowflake')
