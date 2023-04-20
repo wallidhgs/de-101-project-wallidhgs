@@ -711,7 +711,6 @@ with DAG(dag_id="de_project", default_args=constants.dag_default_args, schedule_
         dag=dag
     )
     
-
     # Orchestrator
     connection_check >> get_products_list >> set_product_additional_properties >> load_products_catalogs
     connection_check >> get_sales_list >> set_sales_additional_properties >> load_sales_catalogs
