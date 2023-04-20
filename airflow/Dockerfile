@@ -15,6 +15,11 @@ RUN apt-get update \
 # Copy the requirements file into the container
 COPY requirements.txt .
 
+# Install AWS CLI
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+  && unzip awscliv2.zip \
+  && sudo ./aws/install
+
 # Change to airflow user, to avoid using pip as root
 USER airflow
 
