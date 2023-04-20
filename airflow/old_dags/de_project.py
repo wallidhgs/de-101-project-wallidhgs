@@ -115,11 +115,11 @@ def load_products_file(s3_file):
     df['currency_id'] = df.apply(lambda row: get_key(row['currency']), axis=1)
     df['product_type_id'] = df.apply(lambda row: get_key(row['type']), axis=1)
     df['label_id'] = df.apply(lambda row: get_key(row['label']), axis=1)
-    df['type_id'] = df.apply(lambda row: get_key(row['type']), axis=1)
     df['category_id'] = df.apply(lambda row: get_key('{r_category}{r_type}'.format(
         r_category=row['category'],
         r_type=row['type'],
     )), axis=1)
+    df['type_id'] = df.apply(lambda row: get_key(row['type']), axis=1)
     df['is_main'] = df.apply(lambda row: row['cloudProdID'] == row['color_full_uid'], axis=1)
 
     ret = df.to_csv()
@@ -270,7 +270,7 @@ def load_product(df_csv):
         {'name': 'url', 'wrapper': True},
 
         {'name': 'category', 'wrapper': False},
-        {'name': 'label', 'wrapper': False}
+        {'name': 'label', 'wrapper': False},
     ]
     column_compare = ['id']
     column_names = []
@@ -488,7 +488,7 @@ def load_sale(df_csv):
     print('inserted into snowflake')
     return new_df.to_csv()
 
-with DAG('a_de_project_dag3', default_args=default_args, schedule_interval=None) as dag:
+with DAG('de_project_old', default_args=default_args, schedule_interval=None) as dag:
     product_list_s3 = list_products()
     product_df_csvs = load_products_file.expand(s3_file=product_list_s3)
     currency_dfs = load_currency.expand(df_csv=product_df_csvs)

@@ -3,10 +3,13 @@ scrapper/data
 scrapper/__pycache__
 scrapper/scrapper_env
 
-terraform/.terraform/providers/registry.terraform.io/hashicorp
+terraform/.terraform/*
 terraform/terraform.tfstate
 terraform/terraform.tfstate.backup
 terraform/.terraform.lock.hcl
-airflow/dags/__pycache__
+
 airflow/logs
 airflow/.env
+airflow/tmp/*
+airflow/dags/__pycache__
+airflow/dags/common_de_project/__pycache__

@@ -1,17 +1,22 @@
 from datetime import date, timedelta
+import time
 import pandas
 import random
 import os
 
 class SalesGenerator():
+
     """
     min_qty: Minimum items per ticket (must not be zero)
     max_qty: Maximum items per ticket (must be non zero and equal or higher than min_sales)
     """
     __min_qty = 1
     __max_qty = 5
-    __column_names = ['UID', 'currency', 'sales', 'quantity', 'date']
+    __column_names = ['ticket_id', 'UID', 'currency', 'sales', 'quantity', 'date']
     __file_prefix = 'nike_sales_'
+
+    __min_index=1
+    __max_index=1000000
 
     def __init__(self,
                  nike_df: pandas.DataFrame,
@@ -34,13 +39,17 @@ class SalesGenerator():
 
     def __generate_day(self, day: date):
         df = pandas.DataFrame([], columns=self.__column_names)
-        for index, row in self.__df.iterrows():
+        for _, row in self.__df.iterrows():
             chance = random.randint(1, self.__chance)
             if (chance == self.__chance):
                 sales = random.randint(self.__min, self.__max)
-                for n in range(sales):
+                for _ in range(sales):
                     qty = random.randint(self.__min_qty, self.__max_qty)
                     df.loc[len(df)] = [
+                        int('{date}{random}'.format(
+                            date=day.strftime('%Y%m%d'),
+                            random=str(random.randint(self.__min_index, self.__max_index)).zfill(7)
+                        )),
                         row['UID'],
                         row['currency'],
                         row['currentPrice'] * qty,

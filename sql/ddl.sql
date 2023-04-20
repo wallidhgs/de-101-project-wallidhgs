@@ -59,19 +59,6 @@ CREATE TABLE label_dim
   name VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE product_channel_dim
-(
-  channel INTEGER NOT NULL,
-  CONSTRAINT channel_fkey
-    FOREIGN KEY (channel)
-    REFERENCES channel_dim (id) NOT ENFORCED,
-  
-  product VARCHAR(36) NOT NULL,
-  CONSTRAINT product_fkey
-    FOREIGN KEY (product)
-    REFERENCES product_dim (id) NOT ENFORCED,
-);
-
 CREATE TABLE product_dim
 (
   id VARCHAR(36) NOT NULL PRIMARY KEY,
@@ -100,7 +87,19 @@ CREATE TABLE product_dim
   CONSTRAINT category_fkey
     FOREIGN KEY (category)
     REFERENCES category_dim (id) NOT ENFORCED
+);
 
+CREATE TABLE product_channel_dim
+(
+  channel INTEGER NOT NULL,
+  CONSTRAINT channel_fkey
+    FOREIGN KEY (channel)
+    REFERENCES channel_dim (id) NOT ENFORCED,
+  
+  product VARCHAR(36) NOT NULL,
+  CONSTRAINT product_fkey
+    FOREIGN KEY (product)
+    REFERENCES product_dim (id) NOT ENFORCED
 );
 
 CREATE TABLE color_dim
@@ -148,11 +147,20 @@ CREATE TABLE date_dim
 CREATE TABLE sales_fact
 (
   id INTEGER PRIMARY KEY,
+  ticket_id INTEGER,
   sales DECIMAL(18,2) NOT NULL,
+  quantity INTEGER,
+
+  currency INTEGER,
+  CONSTRAINT currency_fkey
+    FOREIGN KEY (date)
+    REFERENCES currency_dim (id) NOT ENFORCED,
+
   date INTEGER,
   CONSTRAINT date_fkey
     FOREIGN KEY (date)
     REFERENCES date_dim (id) NOT ENFORCED,
+
   product VARCHAR(36),
   CONSTRAINT product_fkey
     FOREIGN KEY (product)

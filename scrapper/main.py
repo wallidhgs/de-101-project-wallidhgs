@@ -3,14 +3,16 @@ import datetime
 from nikescrapi import NikeScrAPI
 from sales_generator import SalesGenerator
 
+# NOTE: for production set max_pages = 200
 nikeAPI = NikeScrAPI(max_pages=1, path='data/products')
 df = nikeAPI.getData()
 
 # Sales generator
 min_sales=0 # minimum tickets for each day sales
 max_sales=5 # maximum tickets for each day sales
-day_count = 90 # generate sales for n previous days use 0 for today only
+day_count = 0 # generate sales for n previous days use 0 for today only
 
+# NOTE: for production set day_count = 90
 gen = SalesGenerator(nike_df=df, min_sales=min_sales, max_sales=max_sales)
 
 end = datetime.datetime.now()
