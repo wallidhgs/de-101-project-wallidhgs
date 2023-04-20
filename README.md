@@ -232,9 +232,8 @@ Note: *Assuming data is generated on 2023 Apr 11 for the last 2 days*
 
 ### DAG Additionals
 
+- The local data is renamed after successful run (not before to let the developer debug the data if error occurs)
 - The DAG will create multiple values as reference (id's), these are unique hashes for each row, which means you can run the DAG with the same information multiple times (UPSERT)
-- The DAG stores the intermediate data back into the S3 bucket (this data can be used as Datalake in the future)
-  - The local data is cleared after successful run (not before to let the developer debug the data if error occurs)
 - The DAG was intended for loading only 1 day of sales, since it was very likely in a production environment data is received once per day, however it supports multiple days at once
 - An additional DAG `de_project_paralel` is provided, these is the same DAG as `de_project`, but the steps for upsert are executed in paralel
   - These DAG ignores FK (currently disabled on script), these could be faster but no safer if planning enabling FK check in the future, check: `sql/ddl.sql`
@@ -253,6 +252,8 @@ Note: *Assuming data is generated on 2023 Apr 11 for the last 2 days*
 - Send slack notification for Scrapper `gh actions` and `dag` triggered/result
 - Enable paralel loading with pyspark and external scripts (Shell Operators or Remote Jobs)
 - Enable cache for file loading
+- Upload intermediate data to S3
+  - Clear local data after success on S3 upload
 
 ## Useful links
 

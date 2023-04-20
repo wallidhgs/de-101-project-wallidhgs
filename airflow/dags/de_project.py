@@ -4,6 +4,7 @@ from ast import literal_eval
 from airflow.models.dag import DAG
 from airflow.utils.task_group import TaskGroup
 from airflow.operators.python_operator import PythonOperator
+from airflow.operators.bash import BashOperator
 
 # We need to add this to Docker path
 import sys
@@ -700,7 +701,6 @@ with DAG(dag_id="de_project", default_args=constants.dag_default_args, schedule_
             dag=dag
         )
 
-        # Operators load_dates does not have any dependency
 
     # Facts
     load_sales_fact = PythonOperator(
@@ -709,7 +709,26 @@ with DAG(dag_id="de_project", default_args=constants.dag_default_args, schedule_
         dag=dag
     )
     
+    # Post processing
+    with TaskGroup("cleanup", tooltip="Cleanup") as cleanup:
+        remove_list_files = BashOperator(
+            task_id='remove_list_files',
+            bash_command="""
+                cd /opt/airflow/tmp && \
+                [ -e products_list.txt ] && rm -- products_list.txt && \
+                [ -e sales_list.txt ] && rm -- sales_list.txt
+            """
+        )
+        rename_folder = BashOperator(
+            task_id='rename_folder',
+            bash_command="""
+                cd /opt/airflow/tmp && \
+                mv data processed
+            """
+        )
+
     # Orchestrator
     connection_check >> get_products_list >> set_product_additional_properties >> load_products_catalogs
     connection_check >> get_sales_list >> set_sales_additional_properties >> load_sales_catalogs
     [load_products_catalogs, load_sales_catalogs] >> load_sales_fact
+    load_sales_fact >> cleanup
