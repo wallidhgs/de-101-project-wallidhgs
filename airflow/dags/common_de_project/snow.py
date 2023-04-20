@@ -73,7 +73,7 @@ class Helper():
                 if col.wrapper:
                     if f'{val}' == f'{nan}':
                         val = ''
-                    val = val.replace("'", '').replace('"', '')
+                    val = f'{val}'.replace("'", '').replace('"', '')
                     select_arr.append(f'\'{val}\' {col.db_col}')
                 else:
                     if f'{val}' == f'{nan}':
@@ -88,44 +88,3 @@ class Helper():
             print(query)
             snow_cursor.execute(query)
         print(f"Inserted into '{self.table}' done.")
-
-"""
-def upsert(df: pandas.DataFrame, table_name: str, columns: list, compare_columns: list, snow_cursor):
-    print(f"Upserting into '{table_name}'...")
-
-    compare_clause_arr = []
-    for col in compare_columns: compare_clause_arr.append(f't1.{col} = t2.{col}')
-    compare_clause = ' AND '.join(compare_clause_arr)
-
-    column_names_arr = []
-    col_insert_arr = []
-    for col in columns:
-        col_insert_arr.append('t2.{db_column}'.format(db_column=col.db_col))
-        column_names_arr.append(col.db_col)
-    column_names = ",".join(column_names_arr)
-    col_insert = ",".join(col_insert_arr)
-
-    for row in df.values.tolist():
-        select_arr = []
-        for i in range(len(columns)):
-            col = columns[i]
-            val = row[i]
-            if col.wrapper:
-                if f'{val}' == f'{nan}':
-                    val = ''
-                val = val.replace("'", '').replace('"', '')
-                select_arr.append(f'\'{val}\' {col.db_col}')
-            else:
-                if f'{val}' == f'{nan}':
-                    val = 'null'
-                select_arr.append(f'{val} {col.db_col}')
-
-        select_query = ",".join(select_arr)
-
-        query = f""MERGE INTO {table_name} t1
-USING (SELECT {select_query}) t2 ON {compare_clause}
-WHEN NOT MATCHED THEN INSERT ({column_names}) VALUES ({col_insert});""
-        print(query)
-        snow_cursor.execute(query)
-    print(f"Insert into '{table_name}' done.")
-"""

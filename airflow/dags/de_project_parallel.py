@@ -615,7 +615,7 @@ def handle_sales_fact():
         df = helper.filter_df(df)
         helper.snowflake_upsert(df=df, snow_cursor=snow_cursor)
 
-with DAG(dag_id="de_project", default_args=constants.dag_default_args, schedule_interval=None, tags=["de_project"]) as dag:
+with DAG(dag_id="de_project_parallel", default_args=constants.dag_default_args, schedule_interval=None, tags=["de_project"]) as dag:
     connection_check = PythonOperator(
         task_id='check_connections',
         python_callable=check_connections,
@@ -675,13 +675,6 @@ with DAG(dag_id="de_project", default_args=constants.dag_default_args, schedule_
             dag=dag
         )
 
-        # Operators load_currency, load_product_type, load_channel, load_label does not have any dependency
-
-        load_product_type >> load_category
-        [load_label, load_category] >> load_product
-        [load_channel, load_product] >> load_product_channel
-        [load_currency, load_product] >> load_color
-
     # Sales
     get_sales_list = PythonOperator(
         task_id='get_sales_list',
@@ -699,17 +692,12 @@ with DAG(dag_id="de_project", default_args=constants.dag_default_args, schedule_
             python_callable=handle_dates,
             dag=dag
         )
-
-        # Operators load_dates does not have any dependency
-
-    # Facts
-    load_sales_fact = PythonOperator(
-        task_id='handle_sales_fact',
-        python_callable=handle_sales_fact,
-        dag=dag
-    )
+        load_sales_fact = PythonOperator(
+            task_id='handle_sales_fact',
+            python_callable=handle_sales_fact,
+            dag=dag
+        )
     
     # Orchestrator
     connection_check >> get_products_list >> set_product_additional_properties >> load_products_catalogs
     connection_check >> get_sales_list >> set_sales_additional_properties >> load_sales_catalogs
-    [load_products_catalogs, load_sales_catalogs] >> load_sales_fact

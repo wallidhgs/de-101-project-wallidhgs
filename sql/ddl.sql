@@ -168,6 +168,7 @@ CREATE TABLE sales_fact
 );
 
 /*
+-- Verify the tables were created
 SELECT * FROM sales_fact;
 SELECT * FROM date_dim;
 SELECT * FROM color_dim;
@@ -179,6 +180,7 @@ SELECT * FROM category_dim;
 SELECT * FROM product_type_dim;
 SELECT * FROM currency_dim;
 
+-- Verify count (progress) before/while/after running DAG
 SELECT
 (SELECT COUNT(*) FROM sales_fact) AS  sales_fact,
 (SELECT COUNT(*) FROM date_dim) AS date_dim,

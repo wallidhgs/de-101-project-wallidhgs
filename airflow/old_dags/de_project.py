@@ -353,7 +353,7 @@ def load_color(df_csv):
         {'name': 'excluded', 'wrapper': False},
         {'name': 'launch', 'wrapper': False},
         {'name': 'member_exclusive', 'wrapper': False},
-        {'name': 'pre_build_id', 'wrapper': True}, # -> Check empty
+        {'name': 'pre_build_id', 'wrapper': True},
         {'name': 'is_new', 'wrapper': False},
         {'name': 'image_url', 'wrapper': True},
         {'name': 'product', 'wrapper': True},

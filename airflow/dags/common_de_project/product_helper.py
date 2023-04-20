@@ -1,6 +1,5 @@
 import pandas
 import constants
-import snow
 from common_de_project import constants, utils
 
 def get_color_full_uid(uid: str):

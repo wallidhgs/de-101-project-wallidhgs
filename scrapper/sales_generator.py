@@ -9,6 +9,8 @@ class SalesGenerator():
     """
     min_qty: Minimum items per ticket (must not be zero)
     max_qty: Maximum items per ticket (must be non zero and equal or higher than min_sales)
+    min_index: Minimum random for ticket_id
+    max_index: Maximum random for ticket_id
     """
     __min_qty = 1
     __max_qty = 5
