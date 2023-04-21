@@ -7,12 +7,16 @@ WORKDIR /app
 USER root
 
 # apt-get update
-# RUN apt-get update \
-#   && apt-get install -y --no-install-recommends \
-#         unzip \
-#   && apt-get autoremove -yqq --purge \
-#   && apt-get clean \
-#   && rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+        unzip \
+  && apt-get autoremove -yqq --purge \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+  && unzip awscliv2.zip \
+  && sudo ./aws/install
 
 # Copy the requirements file into the container
 COPY requirements.txt .
@@ -22,9 +26,6 @@ USER airflow
 
 # Install the necessary dependencies
 RUN pip install --no-cache-dir --user -r requirements.txt
-
-# awscli is installed in a separate command as is part of DAG overall requirements and it's not referenced in code
-# RUN pip install --no-cache-dir --user awscli
 
 # Change password if you are debugging
 # RUN echo 'root:Docker!' | chpasswd

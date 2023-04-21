@@ -1,6 +1,7 @@
 import pandas
 
 from ast import literal_eval
+from os import environ
 from airflow.models.dag import DAG
 from airflow.utils.task_group import TaskGroup
 from airflow.operators.python_operator import PythonOperator
@@ -617,10 +618,17 @@ def handle_sales_fact():
         helper.snowflake_upsert(df=df, snow_cursor=snow_cursor)
 
 with DAG(dag_id="de_project", default_args=constants.dag_default_args, schedule_interval=None, tags=["de_project"]) as dag:
-    connection_check = PythonOperator(
-        task_id='check_connections',
-        python_callable=check_connections,
-        dag=dag
+    with TaskGroup("init_test", tooltip="Initial Check") as init_test:
+        connection_check = PythonOperator(
+            task_id='check_connections',
+            python_callable=check_connections,
+            dag=dag
+        )
+        test_cli = BashOperator(
+        task_id='test_aws_cli',
+        bash_command="""
+            aws --version
+        """
     )
 
     # Product
@@ -701,7 +709,6 @@ with DAG(dag_id="de_project", default_args=constants.dag_default_args, schedule_
             dag=dag
         )
 
-
     # Facts
     load_sales_fact = PythonOperator(
         task_id='handle_sales_fact',
@@ -726,9 +733,27 @@ with DAG(dag_id="de_project", default_args=constants.dag_default_args, schedule_
                 mv data processed
             """
         )
+        upload_lake_s3 = BashOperator(
+            task_id='upload_lake_s3',
+            bash_command=f"""
+                export AWS_ACCESS_KEY_ID={environ.get('AWS_ACCESS_KEY_ID')} && \
+                export AWS_SECRET_ACCESS_KEY={environ.get('AWS_SECRET_ACCESS_KEY')} && \
+                cd /opt/airflow/tmp && \
+                aws s3 sync . s3://de-project-local
+            """
+        )
+        remove_lake_files = BashOperator(
+            task_id='remove_lake_files',
+            bash_command="""
+                cd /opt/airflow/tmp && \
+                [ -e processed ] && rm -rf -- processed
+            """
+        )
+        [remove_list_files, rename_folder] >> upload_lake_s3 >> remove_lake_files
+
 
     # Orchestrator
-    connection_check >> get_products_list >> set_product_additional_properties >> load_products_catalogs
-    connection_check >> get_sales_list >> set_sales_additional_properties >> load_sales_catalogs
+    init_test >> get_products_list >> set_product_additional_properties >> load_products_catalogs
+    init_test >> get_sales_list >> set_sales_additional_properties >> load_sales_catalogs
     [load_products_catalogs, load_sales_catalogs] >> load_sales_fact
     load_sales_fact >> cleanup
